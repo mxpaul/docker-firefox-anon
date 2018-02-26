@@ -1,13 +1,16 @@
-FROM alpine:3.6
+FROM alpine:edge
 
 LABEL maintainer mxpaul <mmonk@cpan.org>
 
 ENV GROUP=wheel
 ENV UID=1000
-ENV FF_PREF_FILE=/usr/lib/firefox-52.5.0/mozilla.cfg
-ENV FF_PREF_DIR=/usr/lib/firefox-52.5.0/browser/defaults/preferences
+ENV FF_PREF_FILE=/usr/lib/firefox-52.6.0/mozilla.cfg
+ENV FF_PREF_DIR=/usr/lib/firefox-52.6.0/browser/defaults/preferences
 
-RUN apk add --no-cache firefox-esr ttf-ubuntu-font-family \
+RUN apk add --no-cache \
+	--repository http://dl-3.alpinelinux.org/alpine/edge/testing/ --allow-untrusted \
+	ttf-ubuntu-font-family \
+	firefox-esr \
 	vlc \
 	vlc-plugins-video_chroma \
 	vlc-plugins-video_filter \
@@ -21,11 +24,15 @@ RUN apk add --no-cache firefox-esr ttf-ubuntu-font-family \
 	vlc-plugins-visualization \
 	vlc-libs \
 	shadow \
+	alsa-lib \
+	alsa-plugins-pulse \
+	pulseaudio\
 ;
 
 #RUN apk add --no-cache strace
 
 RUN adduser -u ${UID} -G ${GROUP} -D tty
+RUN usermod -a -G audio tty
 #RUN usermod -a -G audio,video tty
 
 #RUN perl -E 'say map {sprintf ("%x", int(256*rand())) } 1..16' > /etc/machine-id
