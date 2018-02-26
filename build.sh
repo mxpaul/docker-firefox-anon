@@ -1,1 +1,1 @@
-docker build . -t mxpaul/firefox-anon
+docker build . -t mrmxpaul/firefox-anon
