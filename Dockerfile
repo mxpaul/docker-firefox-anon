@@ -4,8 +4,9 @@ LABEL maintainer mxpaul <mmonk@cpan.org>
 
 ENV GROUP=wheel
 ENV UID=1000
-ENV FF_PREF_FILE=/usr/lib/firefox-52.6.0/mozilla.cfg
-ENV FF_PREF_DIR=/usr/lib/firefox-52.6.0/browser/defaults/preferences
+ENV FF_PROGRAM_DIR=/usr/lib/firefox-52.6.0
+ENV FF_GENERAL_CONFIG_PATH=$FF_PROGRAM_DIR/mozilla.cfg
+ENV FF_PREF_DIR=$FF_PROGRAM_DIR/browser/defaults/preferences
 
 RUN apk add --no-cache \
 	--repository http://dl-3.alpinelinux.org/alpine/edge/testing/ --allow-untrusted \
@@ -48,14 +49,15 @@ RUN echo 'pref("general.config.obscure_value", 0);' >> $FF_PREF_DIR/00_admin-pre
 #RUN cat $FF_PREF_DIR/00_admin-prefs.js
 
 
-COPY mozilla.cfg $FF_PREF_FILE
-RUN chown 0.0 $FF_PREF_FILE
-RUN chmod 0644 $FF_PREF_FILE
-#RUN cat $FF_PREF_FILE
+COPY --chown=0:0 mozilla.cfg $FF_GENERAL_CONFIG_PATH
+RUN chmod 0644 $FF_GENERAL_CONFIG_PATH
+
+ADD --chown=0:0 extensions.tgz $FF_PROGRAM_DIR/distribution/
 
 USER tty
 
 ENTRYPOINT [ "/usr/bin/firefox-runner" ]
+#WORKDIR /usr/lib/firefox-52.6.0
 #ENTRYPOINT [ "/bin/sh" ]
 #ENTRYPOINT [ "strace", "-f", "-e", "trace=stat", "firefox" ]
 

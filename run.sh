@@ -10,3 +10,4 @@ mrmxpaul/firefox-anon \
 	#-v ~/.config/pulse/cookie:/home/tty/.config/pulse/cookie \
 	#-v /run/dbus/:/run/dbus/ -v /dev/shm:/dev/shm \
 	#--device /dev/snd \
+  #-v `pwd`/Downloads:/home/tty/Downloads \
